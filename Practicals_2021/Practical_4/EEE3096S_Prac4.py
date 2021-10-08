@@ -38,7 +38,7 @@ def setup():
 
     pass
 
-def display(step):
+def display():
     #********************************************************************************************************
  # Initiate time thread
     global timeThread
