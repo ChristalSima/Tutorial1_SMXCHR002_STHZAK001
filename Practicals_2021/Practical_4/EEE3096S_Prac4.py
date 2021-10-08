@@ -1,7 +1,7 @@
 from time import time
 import busio
 import digitalio
-import board
+#import board
 # import os
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
@@ -14,7 +14,7 @@ cs = None
 mcp = None
 chan1 = None
 chan2 = None
-btn_TimeStep = 8
+btn_TimeStep = None
 step = 10
 timeStart = None
 timeThread = None
@@ -22,7 +22,6 @@ timeThread = None
 
 def setup():
     global spi, cs, mcp, chan1, chan2, btn_TimeStep, timeStart
-    GPIO.setmode(GPIO.BOARD)
  # create the spi bus
     spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
  # create the cs (chip select)
@@ -33,7 +32,10 @@ def setup():
     chan2 = AnalogIn(mcp, MCP.P1)
     chan1 = AnalogIn(mcp, MCP.P2)
  # Input button setup with event detection
-    GPIO.setup(btn_TimeStep,GPIO.IN, pull_up_down = GPIO.PUD_UP)
+    #GPIO.setup(btn_TimeStep,GPIO.IN, pull_up_down = GPIO.PUD_UP)
+    btn_TimeStep = digitalio.DigitalInOut(board.D4)
+    btn_TimeStep.direction = digitalio.Direction.INPUT
+    btn_TimeStep.pull = digitalio.Pull.UP
     GPIO.add_event_detect(btn_TimeStep,GPIO.FALLING, callback = setTimeStep, bouncetime = 200)
  #Setup Column heads
     print("{0:<12}{1:<15}{2:<10}{3:<15}".format("Runtime","Temp Reading","Temp","Light Reading"))
