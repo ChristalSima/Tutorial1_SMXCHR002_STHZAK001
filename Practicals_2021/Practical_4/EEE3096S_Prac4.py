@@ -9,7 +9,7 @@ import threading
 
 chan1 = 0
 chan2 = 0
-btn_TimeStep = 16
+btn_TimeStep = 23
 step = 10
 timeStart = None
 timeThread = None
@@ -40,7 +40,7 @@ def setup():
 
  # Button IRQ handling
 def setTimeStep(channel):
-    global step, timeThread
+    global step #, timeThread
     if step == 10:
         step = 5
     elif step == 5:
@@ -48,13 +48,13 @@ def setTimeStep(channel):
     else:
         step = 10
     pass
-    timeThread.join()
-    display()
+#    timeThread.join()
+#    display()
 
 def display():
     #********************************************************************************************************
  # Initiate time thread
-    global timeThread
+    global timeThread, step
     timeThread = threading.Timer(step, display)
     timeThread.daemon = True
     timeThread.start()
