@@ -1,8 +1,6 @@
-from time import time
 import busio
 import digitalio
 import board
-# import os
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 import RPi.GPIO as GPIO
@@ -11,9 +9,10 @@ import threading
 
 chan1 = 0
 chan2 = 0
-btn_TimeStep = 8
+btn_TimeStep = 16
 step = 10
 timeStart = None
+timeThread = None
 
 
 def setup():
@@ -46,8 +45,9 @@ def display(step):
     timeThread = threading.Timer(step, display)
     timeThread.daemon = True
     timeThread.start()
+ # Runtime calculation
+    dRun = ((timeStart - datetime.datetime.now)).seconds
  # Fetch sensor data
- #   dRun = ((timeStart - datetime.datetime.now))
     Temp_ADC = chan2.value
     Temp = "{0:2.2f} C".format(chan2.voltage)
     Light_ADC = chan1.value
@@ -63,14 +63,12 @@ def setTimeStep(channel):
     else:
         step = 10
     pass
-    timeThread.join()
-    display(step)
 
 if __name__ == "__main__":
 #    try:
 #     # Call setup function
 #        setup()
-#        display(step)
+#        display()
 #        while True:  
 #            pass
 #    except Exception as e:
@@ -78,6 +76,6 @@ if __name__ == "__main__":
 #    finally:
 #        GPIO.cleanup()
     setup()
-    display(step)
+    display()
     while True:
         pass
