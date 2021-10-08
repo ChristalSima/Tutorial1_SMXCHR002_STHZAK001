@@ -9,19 +9,15 @@ import RPi.GPIO as GPIO
 import datetime
 import threading
 
-spi = None
-cs = None
-mcp = None
-chan1 = None
-chan2 = None
+chan1 = 0
+chan2 = 0
 btn_TimeStep = 8
 step = 10
 timeStart = None
-timeThread = None
 
 
 def setup():
-    global spi, cs, mcp, chan1, chan2, timeStart
+    global chan1, chan2, timeStart
     GPIO.setmode(GPIO.BCM)
  # Input button setup with event detection
     GPIO.setup(btn_TimeStep,GPIO.IN, pull_up_down = GPIO.PUD_UP)
@@ -33,8 +29,8 @@ def setup():
  # create the mcp object
     mcp = MCP.MCP3008(spi, cs)
  # create an analog input channel on pins 1 and 2
-    chan2 = AnalogIn(mcp, MCP.P1)
-    chan1 = AnalogIn(mcp, MCP.P2)
+    chan1 = AnalogIn(mcp, MCP.P1)
+    chan2 = AnalogIn(mcp, MCP.P2)
  
  #Setup Column heads
     print("{0:<12}{1:<15}{2:<10}{3:<15}".format("Runtime","Temp Reading","Temp","Light Reading"))
@@ -71,13 +67,17 @@ def setTimeStep(channel):
     display(step)
 
 if __name__ == "__main__":
-    try:
-     # Call setup function
-        setup()
-        display(step)
-        while True:  
-            pass
-    except Exception as e:
-        print(e)
-    finally:
-        GPIO.cleanup()
+#    try:
+#     # Call setup function
+#        setup()
+#        display(step)
+#        while True:  
+#            pass
+#    except Exception as e:
+#        print(e)
+#    finally:
+#        GPIO.cleanup()
+    setup()
+    display(step)
+    while True:
+        pass
