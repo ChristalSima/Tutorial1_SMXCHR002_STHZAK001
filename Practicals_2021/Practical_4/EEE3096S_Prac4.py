@@ -21,8 +21,11 @@ timeThread = None
 
 
 def setup():
-    global spi, cs, mcp, chan1, chan2, btn_TimeStep, timeStart
+    global spi, cs, mcp, chan1, chan2, timeStart
     GPIO.setmode(GPIO.BCM)
+ # Input button setup with event detection
+    GPIO.setup(btn_TimeStep,GPIO.IN, pull_up_down = GPIO.PUD_UP)
+    GPIO.add_event_detect(btn_TimeStep,GPIO.FALLING, callback = setTimeStep, bouncetime = 200)
  # create the spi bus
     spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
  # create the cs (chip select)
@@ -32,9 +35,7 @@ def setup():
  # create an analog input channel on pins 1 and 2
     chan2 = AnalogIn(mcp, MCP.P1)
     chan1 = AnalogIn(mcp, MCP.P2)
- # Input button setup with event detection
-    GPIO.setup(btn_TimeStep,GPIO.IN, pull_up_down = GPIO.PUD_UP)
-    GPIO.add_event_detect(btn_TimeStep,GPIO.FALLING, callback = setTimeStep, bouncetime = 200)
+ 
  #Setup Column heads
     print("{0:<12}{1:<15}{2:<10}{3:<15}".format("Runtime","Temp Reading","Temp","Light Reading"))
  #Fetch time corresponding with the start up of the program
