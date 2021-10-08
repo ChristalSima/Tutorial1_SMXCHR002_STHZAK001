@@ -34,7 +34,7 @@ def setup():
  #Setup Column heads
     print("{0:<12}{1:<15}{2:<10}{3:<15}".format("Runtime","Temp Reading","Temp","Light Reading"))
  #Fetch time corresponding with the start up of the program
-    timeStart = datetime.datetime.now
+    timeStart = datetime.datetime.now()
 
     pass
 
@@ -46,12 +46,13 @@ def display():
     timeThread.daemon = True
     timeThread.start()
  # Runtime calculation
-    dRun = ((timeStart - datetime.datetime.now)).seconds
+    dur = (datetime.datetime.now() - timeStart)
+    durString = "{0:3.0f}s".format(dur.seconds)
  # Fetch sensor data
     Temp_ADC = chan2.value
-    Temp = "{0:2.2f} C".format(chan2.voltage)
+    Temp = "{0:2.2f} C".format(100*(chan2.voltage-0.5))
     Light_ADC = chan1.value
-    print("{0:<12}{1:<15}{2:<10}{3:<15}".format("***",Temp_ADC,Temp,Light_ADC))
+    print("{0:<12}{1:<15}{2:<10}{3:<15}".format(durString,Temp_ADC,Temp,Light_ADC))
 
  # Button IRQ handling
 def setTimeStep(channel):
