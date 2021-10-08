@@ -48,11 +48,8 @@ def setTimeStep(channel):
     else:
         step = 10
     pass
-#    timeThread.join()
-#    display()
 
 def display():
-    #********************************************************************************************************
  # Initiate time thread
     global timeThread, step
     timeThread = threading.Timer(step, display)
