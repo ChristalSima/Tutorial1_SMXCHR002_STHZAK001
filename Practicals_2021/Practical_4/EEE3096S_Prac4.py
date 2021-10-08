@@ -40,7 +40,7 @@ def setup():
 
  # Button IRQ handling
 def setTimeStep(channel):
-    global step
+    global step, timeThread
     if step == 10:
         step = 5
     elif step == 5:
@@ -48,6 +48,8 @@ def setTimeStep(channel):
     else:
         step = 10
     pass
+    timeThread.join()
+    display()
 
 def display():
     #********************************************************************************************************
