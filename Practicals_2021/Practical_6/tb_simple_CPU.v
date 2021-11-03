@@ -61,7 +61,6 @@ module tb_simple_CPU;
         instruction = 20'b10111000000011110000;
         repeat(7) #1 clk=!clk;
 
-        
     end
     
     

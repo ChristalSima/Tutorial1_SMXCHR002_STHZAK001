@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module CU (clk,rst, instr, result2, operand1, operand2, offset, opcode, sel1, sel3,w_r);
+module CU (clk,rst, instr, result2, operand1, operand2, offset, opcode, sel1, sel3,w_r, Reg_file);
     //Defaults unless overwritten during instantiation
     parameter DATA_WIDTH = 8; //8 bit wide data
     parameter ADDR_BITS = 5; //32 Addresses
@@ -16,11 +16,14 @@ module CU (clk,rst, instr, result2, operand1, operand2, offset, opcode, sel1, se
     output reg [DATA_WIDTH-1:0] offset;
     output reg [3:0] opcode;
     output reg sel1, sel3, w_r;
+    output reg [4*DATA_WIDTH-1:0] Reg_file;
 
     //REGISTER FILE: CU internal register file of 4 registers.  This is a over simplication of a real solution
     reg [DATA_WIDTH-1:0] regfile [0:3];
     reg [INSTR_WIDTH-1:0] instruction;
     
+    assign Reg_file = {regfile[3], regfile[2], regfile[1], regfile[0]};
+
     //STATES
     parameter RESET = 4'b0000;
     parameter DECODE = 4'b0001;
@@ -82,9 +85,9 @@ module CU (clk,rst, instr, result2, operand1, operand2, offset, opcode, sel1, se
                     operand2 <= regfile[instruction[17:16]]; //X1
                     offset <= instruction[11:4];
                     opcode <= instruction[3:0];
-                    sel1 <= 0; //pass data_out (Doesn't Matter?)
+                    sel1 <= 0; //pass data_out (Retaining X1)
                     sel3 <= 1; //pass offset
-                    w_r <= 1; //Write data from operand 2 into data memory
+                    w_r <= 0; //Only Write data from operand 2 into data memory when state = EXECUTE
                     //*************************************************************************
                 end
 
@@ -114,7 +117,7 @@ module CU (clk,rst, instr, result2, operand1, operand2, offset, opcode, sel1, se
                     operand2 <= regfile[instruction[17:16]]; //X1
                     offset <= instruction[11:4];
                     opcode <= instruction[3:0];
-                    sel1 <= 0; //pass data_out (Doesn't Matter?)
+                    sel1 <= 0; //pass data_out (Retaining X1)
                     sel3 <= 1; //pass offset
                     w_r <= 1; //Write data from operand 2 into data memory
                    //*************************************************************************
@@ -137,9 +140,9 @@ module CU (clk,rst, instr, result2, operand1, operand2, offset, opcode, sel1, se
                     operand2 <= regfile[instruction[17:16]]; //X1
                     offset <= instruction[11:4];
                     opcode <= instruction[3:0];
-                    sel1 <= 0; //pass data_out (Doesn't Matter?)
+                    sel1 <= 0; //pass data_out (Retaining X1)
                     sel3 <= 1; //pass offset
-                    w_r <= 1; //Write data from operand 2 into data memory
+                    w_r <= 0; //Only Write data from operand 2 into data memory when state = EXECUTE
                     //*************************************************************************
                 end
             end
@@ -157,15 +160,15 @@ module CU (clk,rst, instr, result2, operand1, operand2, offset, opcode, sel1, se
                     w_r <= 0;
                 end else if (instruction[19:18] == 2'b11) begin //storeR 
                    //****************************************************************Code Here
-                    regfile[instruction[17:16]] <= result2; //From data mem (Doesn't matter?)
+                    regfile[instruction[17:16]] <= result2; //From data mem (Retaining X1)
                     
                     operand1 <= regfile[instruction[15:14]]; //X2
                     operand2 <= regfile[instruction[17:16]]; //X1
                     offset <= instruction[11:4];
                     opcode <= instruction[3:0];
-                    sel1 <= 0; //pass data_out (Doesn't Matter?)
+                    sel1 <= 0; //pass data_out (Retaining X1)
                     sel3 <= 1; //pass offset
-                    w_r <= 1; //Write data from operand 2 into data memory
+                    w_r <= 0; //Only Write data from operand 2 into data memory when state = EXECUTE
                    //************************************************************************* 
                 end else if (instruction[19:18] == 2'b10) begin //loadR             
                     regfile[instruction[17:16]] <= result2; //From data mem
